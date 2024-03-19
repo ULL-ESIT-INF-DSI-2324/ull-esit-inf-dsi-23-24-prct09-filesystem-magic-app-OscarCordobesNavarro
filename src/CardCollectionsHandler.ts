@@ -10,11 +10,15 @@
  * Práctica 9: Clases e interfaces genéricas. Principios SOLID
  */
 
-import { ICard, Color, TypeLine, Rarity } from "./ICard.js";
+import { ICard } from "./ICard.js";
+import { Color } from "./IColor.js";
 import fs, { readFileSync } from "fs";
 import chalk from "chalk";
 
-// Clase para manejar de forma asincrona las colecciones de cartas Magic
+
+/**
+ * Clase que se encarga de gestionar las colecciones de cartas
+ */
 export class CardCollectionsHandler {
   private userCollectionPath: string = "./data/";
   private userCollection: ICard[] = [];
@@ -23,25 +27,62 @@ export class CardCollectionsHandler {
   constructor(userName?: string) {
     if (userName) {
       this.userName = userName;
-      this.updatePath(userName);
+      this.updateUser(userName);
     }
   }
 
-  public updatePath(newUser: string) {
+  
+  /**
+   * Actualiza el usuario y la ruta de la colección de usuario.
+   * @param newUser El nuevo nombre de usuario.
+   * @returns void
+   */
+  public updateUser(newUser: string): void {
     this.userCollectionPath = "./data/" + newUser + ".json";
     this.userCollection = [];
   }
 
-  private readCollection() {
+  /**
+   * Actualiza la ruta de la colección de usuario.
+   * @param path La nueva ruta de la colección de usuario.
+   * @returns void
+   */
+  public updatePath(path: string): void {
+    this.userCollectionPath = path;
+    this.userCollection = [];
+  }
+
+  
+  /**
+   * Lee la colección de cartas desde el archivo especificado.
+   * Si el archivo no existe, se crea y se inicializa con un array vacío.
+   * @returns void
+   */
+  private readCollection(): void {
+    // Asegurarse de que el archivo existe
+    if (!fs.existsSync(this.userCollectionPath)) {
+      fs.writeFileSync(this.userCollectionPath, "[]");
+    }
     const data = fs.readFileSync(this.userCollectionPath, "utf-8");
     this.userCollection = JSON.parse(data);
   }
 
-  private writeCollection(data: ICard[]) {
+  /**
+   * Escribe la colección de cartas en el archivo especificado.
+   * @param data La colección de cartas a escribir.
+   * @returns void
+   */
+  private writeCollection(data: ICard[]): void {
     fs.writeFileSync(this.userCollectionPath, JSON.stringify(data, null, 1));
   }
 
-  public addCard(card: ICard) {
+  
+  /**
+   * Añade una tarjeta a la colección del usuario.
+   * @param card La tarjeta que se va a añadir.
+   * @returns void
+   */
+  public addCard(card: ICard): void {
     this.readCollection();
     if (this.userCollection.find((c) => c.id === card.id)) {
       console.log(
@@ -57,7 +98,12 @@ export class CardCollectionsHandler {
     }
   }
 
-  public removeCard(id: number) {
+  /**
+   * Elimina una tarjeta de la colección del usuario.
+   * @param id El identificador de la tarjeta que se va a eliminar.
+   * @returns void
+   */
+  public removeCard(id: number): void {
     this.readCollection();
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
@@ -74,7 +120,12 @@ export class CardCollectionsHandler {
     }
   }
 
-  public readCard(id: number) {
+  /**
+   * Lee una tarjeta de la colección del usuario.
+   * @param id El identificador de la tarjeta que se va a leer.
+   * @returns void
+   */
+  public readCard(id: number): void {
     this.readCollection();
     const card = this.userCollection.find((card) => card.id === id);
     if (card) {
@@ -86,7 +137,13 @@ export class CardCollectionsHandler {
     }
   }
 
-  public updateCard(card: ICard, id: number) {
+  /**
+   * Actualiza una tarjeta de la colección del usuario.
+   * @param card La tarjeta que se va a actualizar.
+   * @param id El identificador de la tarjeta que se va a actualizar.
+   * @returns void
+   */
+  public updateCard(card: ICard, id: number): void {
     this.readCollection();
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
@@ -103,7 +160,11 @@ export class CardCollectionsHandler {
     }
   }
 
-  public listCollection() {
+  /**
+   * Lista todas las tarjetas de la colección del usuario.
+   * @returns void
+   */
+  public listCollection(): void {
     this.readCollection();
     if (this.userCollection.length === 0) {
       console.log(chalk.red("empty collection"));
@@ -111,16 +172,21 @@ export class CardCollectionsHandler {
     } else {
       console.log(chalk.green.bold("Collection of " + this.userName + ":"));
       this.userCollection.forEach((card) => {
-        console.log("---------------------------------\n");
+        console.log("---------------------------------");
         this.printCard(card);
       });
     }
   }
 
+  /**
+   * Imprime una tarjeta.
+   * @param card La tarjeta que se va a imprimir.
+   * @returns void
+   */
   private printCard(card: ICard) {
     const colorName = Object.keys(Color).find(key => Color[key as keyof typeof Color] === card.color);
     console.log(
-      " " + chalk.blue.bold("Card ID: ") + card.id + "\n",
+      "\n " + chalk.blue.bold("Card ID: ") + card.id + "\n",
       chalk.blue.bold("Card Name: ") + card.name + "\n",
       chalk.blue.bold("Card Mana Cost: ") + card.manaCost + "\n",
       chalk.hex(card.color).bold("Card Color: ") + colorName + "\n",
@@ -130,5 +196,22 @@ export class CardCollectionsHandler {
       chalk.blue.bold("Card Market Value: ") + card.marketValue + "\n",
     );
   }
-    
+
+  /**
+   * Obtiene una tarjeta de la colección del usuario.
+   * @param id El identificador de la tarjeta que se va a obtener.
+   * @returns La tarjeta que se ha obtenido ICard.
+   */
+  public getCard(id: number): ICard {
+    this.readCollection();
+    const card = this.userCollection.find((card) => card.id === id);
+    if (card) {
+      return card;
+    } else {
+      console.log(
+        chalk.red.bold("card not found at " + this.userName + " collection"),
+      );
+      throw new Error("Card not found");
+    }
+  }
 }
