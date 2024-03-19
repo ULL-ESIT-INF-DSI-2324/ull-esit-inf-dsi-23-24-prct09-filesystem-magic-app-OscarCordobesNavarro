@@ -8,299 +8,344 @@ import { Rarity } from "./IRarity.js";
 import { TypeLine } from "./ITypeLine.js";
 
 
+// yargs(hideBin(process.argv))
+//   .command(
+//     "add",
+//     "Add a card to the collection",
+//     {
+//       user: {
+//         alias: "u",
+//         description: "User Name",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       id: {
+//         alias: "i",
+//         description: "Card ID",
+//         type: "number",
+//         demandOption: true,
+//       },
+//       name: {
+//         alias: "n",
+//         description: "Card Name",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       manaCost: {
+//         alias: "m",
+//         description: "Card Mana Cost",
+//         type: "number",
+//         demandOption: true,
+//       },
+//       color: {
+//         alias: "c",
+//         description: "Card Color, use upper camel case",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       lineType: {
+//         alias: "l",
+//         description: "Card Type Line",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       rarity: {
+//         alias: "r",
+//         description: "Card Rarity",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       ruleText: {
+//         alias: "ruletext",
+//         description: "Card Rule Text",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       strength: {
+//         alias: "s",
+//         description: "Card Strength",
+//         type: "number",
+//         demandOption: false,
+//       },
+//       endurance: {
+//         alias: "e",
+//         description: "Card Endurance",
+//         type: "number",
+//         demandOption: false,
+//       },
+//       brandsLoyalty: {
+//         alias: "b",
+//         description: "Card Brands Loyalty",
+//         type: "number",
+//         demandOption: false,
+//       },
+//       marketValue: {
+//         alias: "v",
+//         description: "Card Market Value",
+//         type: "number",
+//         demandOption: true,
+//       },
+//     },
+//     (argv) => {
+//       const cardHandler = new CardCollectionsHandler(argv.user);
+//       // Gestionamos el color pasando de la etiqueta a la variable que representa el enumerado
+
+//       // Conseguimos el objeto Color a partir de la etiqueta argv.colo
+//       const color = Color[argv.color as keyof typeof Color];
+//       const typeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
+//       const rarity = Rarity[argv.rarity as keyof typeof Rarity];
+      
+//       console.log("Color:", color);
+
+//       if (!color) {
+//         console.log(chalk.red("Color not found"));
+//         return;
+//       }
+
+//       if (!typeLine) {
+//         console.log(chalk.red("Type Line not found"));
+//         return;
+//       }
+
+//       if (!rarity) {
+//         console.log(chalk.red("Rarity not found"));
+//         return;
+//       }
+
+//       cardHandler.addCard({
+//         id: argv.id,
+//         name: argv.name,
+//         manaCost: argv.manaCost,
+//         color: color,
+//         lineType: typeLine,
+//         rarity: rarity,
+//         ruleText: argv.ruleText,
+//         strength: argv.strength,
+//         endurance: argv.endurance,
+//         brandsLoyalty: argv.brandsLoyalty,
+//         marketValue: argv.marketValue,
+//       });
+//     },
+//   )
+//   .command(
+//     "remove",
+//     "remove a card of the user collection",
+//     {
+//       user: {
+//         alias: "u",
+//         description: "User Name",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       id: {
+//         alias: "i",
+//         description: "Card ID",
+//         type: "number",
+//         demandOption: true,
+//       },
+//     },
+//     (argv) => {
+//       const cardHandler = new CardCollectionsHandler(argv.user);
+//       cardHandler.removeCard(argv.id);
+//     },
+//   )
+//   .command(
+//     "read",
+//     "read a card of the user collection",
+//     {
+//       user: {
+//         alias: "u",
+//         description: "User Name",
+//         type: "string",
+//         demandOption: true,
+//       },
+//       id: {
+//         alias: "i",
+//         description: "Card ID",
+//         type: "number",
+//         demandOption: true,
+//       },
+//     },
+//     (argv) => {
+//       const cardHandler = new CardCollectionsHandler(argv.user);
+//       cardHandler.readCard(argv.id);
+//     },
+//   ).command(
+//     "update",
+//     "update a card of the user collection",
+//   {
+//     user: {
+//       alias: "u",
+//       description: "User Name",
+//       type: "string",
+//       demandOption: true,
+//     },
+//     id: {
+//       alias: "i",
+//       description: "Card ID",
+//       type: "number",
+//       demandOption: true,
+//     },
+//     name: {
+//       alias: "n",
+//       description: "Card Name",
+//       type: "string",
+//       demandOption: false,
+//     },
+//     manaCost: {
+//       alias: "m",
+//       description: "Card Mana Cost",
+//       type: "number",
+//       demandOption: false,
+//     },
+//     color: {
+//       alias: "c",
+//       description: "Card Color, use upper camel case",
+//       type: "string",
+//       demandOption: false,
+//     },
+//     lineType: {
+//       alias: "l",
+//       description: "Card Type Line",
+//       type: "string",
+//       demandOption: false,
+//     },
+//     rarity: {
+//       alias: "r",
+//       description: "Card Rarity",
+//       type: "string",
+//       demandOption: false,
+//     },
+//     ruleText: {
+//       alias: "ruletext",
+//       description: "Card Rule Text",
+//       type: "string",
+//       demandOption: false,
+//     },
+//     strength: {
+//       alias: "s",
+//       description: "Card Strength",
+//       type: "number",
+//       demandOption: false,
+//     },
+//     endurance: {
+//       alias: "e",
+//       description: "Card Endurance",
+//       type: "number",
+//       demandOption: false,
+//     },
+//     brandsLoyalty: {
+//       alias: "b",
+//       description: "Card Brands Loyalty",
+//       type: "number",
+//       demandOption: false,
+//     },
+//     marketValue: {
+//       alias: "v",
+//       description: "Card Market Value",
+//       type: "number",
+//       demandOption: false,
+//     },
+//   },
+//   (argv) => {
+//     const cardHandler = new CardCollectionsHandler(argv.user);
+//     // Gestionamos el Color, typeLine y rarity si se pasa
+//     let cardToModify: ICard;
+//     try{
+//       cardToModify = cardHandler.getCard(argv.id);
+//     } catch {
+//       console.log(chalk.red("Card not found"));
+//       return;
+//     }
+
+//     let newColor: Color = cardHandler.getCard(argv.id).color; 
+//     if (argv.color) {
+//       newColor = Color[argv.color as keyof typeof Color];
+//       if (!newColor) {
+//         console.log(chalk.red("Color not found"));
+//         return;
+//       }
+//     }
+
+//     let newTypeLine: TypeLine = cardHandler.getCard(argv.id).lineType;
+//     if (argv.lineType) {
+//       newTypeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
+//       if (!newTypeLine) {
+//         console.log(chalk.red("Type Line not found"));
+//         return;
+//       }
+//     }
+
+//     let newRarity: Rarity = cardHandler.getCard(argv.id).rarity;
+//     if (argv.rarity) {
+//       newRarity = Rarity[argv.rarity as keyof typeof Rarity];
+//       if (!newRarity) {
+//         console.log(chalk.red("Rarity not found"));
+//         return;
+//       }
+//     }
+
+//     const newCard: ICard = {
+//       id: argv.id,
+//       name: argv.name || cardToModify.name,
+//       manaCost: argv.manaCost || cardToModify.manaCost,
+//       color: newColor,
+//       lineType: newTypeLine,
+//       rarity: newRarity,
+//       ruleText: argv.ruleText || cardToModify.ruleText,
+//       strength: argv.strength || cardToModify.strength,
+//       endurance: argv.endurance || cardToModify.endurance,
+//       brandsLoyalty: argv.brandsLoyalty || cardToModify.brandsLoyalty,
+//       marketValue: argv.marketValue || cardToModify.marketValue,
+//     };
+
+//     cardHandler.updateCard(newCard, argv.id);
+//   },
+//   )
+//   .help()
+//   .argv;
+
+
+interface stringOption {
+  user: string;
+  _: string[];
+  $0: string;
+}
+
+const userOption: stringOption = yargs(hideBin(process.argv)).option('user', {
+  alias: "u",
+  description: "User Name",
+  type: "string",
+  demandOption: true,
+}).argv as stringOption;
+
+// Definir las opciones para 'id'
+interface numberOption {
+  id: number;
+  _: string[];
+  $0: string;
+}
+
+const idOption: numberOption = yargs(hideBin(process.argv)).option('id', {
+  alias: "i",
+  description: "Card ID",
+  type: "number",
+  demandOption: true,
+}).argv as numberOption;
+
+// Definir el comando 'read'
 yargs(hideBin(process.argv))
   .command(
-    "add",
-    "Add a card to the collection",
-    {
-      user: {
-        alias: "u",
-        description: "User Name",
-        type: "string",
-        demandOption: true,
-      },
-      id: {
-        alias: "i",
-        description: "Card ID",
-        type: "number",
-        demandOption: true,
-      },
-      name: {
-        alias: "n",
-        description: "Card Name",
-        type: "string",
-        demandOption: true,
-      },
-      manaCost: {
-        alias: "m",
-        description: "Card Mana Cost",
-        type: "number",
-        demandOption: true,
-      },
-      color: {
-        alias: "c",
-        description: "Card Color, use upper camel case",
-        type: "string",
-        demandOption: true,
-      },
-      lineType: {
-        alias: "l",
-        description: "Card Type Line",
-        type: "string",
-        demandOption: true,
-      },
-      rarity: {
-        alias: "r",
-        description: "Card Rarity",
-        type: "string",
-        demandOption: true,
-      },
-      ruleText: {
-        alias: "ruletext",
-        description: "Card Rule Text",
-        type: "string",
-        demandOption: true,
-      },
-      strength: {
-        alias: "s",
-        description: "Card Strength",
-        type: "number",
-        demandOption: false,
-      },
-      endurance: {
-        alias: "e",
-        description: "Card Endurance",
-        type: "number",
-        demandOption: false,
-      },
-      brandsLoyalty: {
-        alias: "b",
-        description: "Card Brands Loyalty",
-        type: "number",
-        demandOption: false,
-      },
-      marketValue: {
-        alias: "v",
-        description: "Card Market Value",
-        type: "number",
-        demandOption: true,
-      },
-    },
-    (argv) => {
-      const cardHandler = new CardCollectionsHandler(argv.user);
-      // Gestionamos el color pasando de la etiqueta a la variable que representa el enumerado
-
-      // Conseguimos el objeto Color a partir de la etiqueta argv.colo
-      const color = Color[argv.color as keyof typeof Color];
-      const typeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
-      const rarity = Rarity[argv.rarity as keyof typeof Rarity];
-      
-      console.log("Color:", color);
-
-      if (!color) {
-        console.log(chalk.red("Color not found"));
-        return;
-      }
-
-      if (!typeLine) {
-        console.log(chalk.red("Type Line not found"));
-        return;
-      }
-
-      if (!rarity) {
-        console.log(chalk.red("Rarity not found"));
-        return;
-      }
-
-      cardHandler.addCard({
-        id: argv.id,
-        name: argv.name,
-        manaCost: argv.manaCost,
-        color: color,
-        lineType: typeLine,
-        rarity: rarity,
-        ruleText: argv.ruleText,
-        strength: argv.strength,
-        endurance: argv.endurance,
-        brandsLoyalty: argv.brandsLoyalty,
-        marketValue: argv.marketValue,
-      });
-    },
+    'read',
+    'lee una carta',
+    // Handler para el comando 'read'
+    () => {
+      // Aquí puedes utilizar 'userOption' y 'idOption'
+      // const cardHandler = new CardCollectionsHandler(userOption.user);
+      // cardHandler.readCard(idOption.id);
+      console.log("id:(" + idOption.id + ") _:(" + idOption._ + ") $0:(" + idOption.$0 + ")");
+      console.log("user:(" + userOption.user + ") _:(" + userOption._ + ") $0:(" + userOption.$0 + ")");
+    }
   )
-  .command(
-    "remove",
-    "remove a card of the user collection",
-    {
-      user: {
-        alias: "u",
-        description: "User Name",
-        type: "string",
-        demandOption: true,
-      },
-      id: {
-        alias: "i",
-        description: "Card ID",
-        type: "number",
-        demandOption: true,
-      },
-    },
-    (argv) => {
-      const cardHandler = new CardCollectionsHandler(argv.user);
-      cardHandler.removeCard(argv.id);
-    },
-  )
-  .command(
-    "read",
-    "read a card of the user collection",
-    {
-      user: {
-        alias: "u",
-        description: "User Name",
-        type: "string",
-        demandOption: true,
-      },
-      id: {
-        alias: "i",
-        description: "Card ID",
-        type: "number",
-        demandOption: true,
-      },
-    },
-    (argv) => {
-      const cardHandler = new CardCollectionsHandler(argv.user);
-      cardHandler.readCard(argv.id);
-    },
-  ).command(
-    "update",
-    "update a card of the user collection",
-  {
-    user: {
-      alias: "u",
-      description: "User Name",
-      type: "string",
-      demandOption: true,
-    },
-    id: {
-      alias: "i",
-      description: "Card ID",
-      type: "number",
-      demandOption: true,
-    },
-    name: {
-      alias: "n",
-      description: "Card Name",
-      type: "string",
-      demandOption: false,
-    },
-    manaCost: {
-      alias: "m",
-      description: "Card Mana Cost",
-      type: "number",
-      demandOption: false,
-    },
-    color: {
-      alias: "c",
-      description: "Card Color, use upper camel case",
-      type: "string",
-      demandOption: false,
-    },
-    lineType: {
-      alias: "l",
-      description: "Card Type Line",
-      type: "string",
-      demandOption: false,
-    },
-    rarity: {
-      alias: "r",
-      description: "Card Rarity",
-      type: "string",
-      demandOption: false,
-    },
-    ruleText: {
-      alias: "ruletext",
-      description: "Card Rule Text",
-      type: "string",
-      demandOption: false,
-    },
-    strength: {
-      alias: "s",
-      description: "Card Strength",
-      type: "number",
-      demandOption: false,
-    },
-    endurance: {
-      alias: "e",
-      description: "Card Endurance",
-      type: "number",
-      demandOption: false,
-    },
-    brandsLoyalty: {
-      alias: "b",
-      description: "Card Brands Loyalty",
-      type: "number",
-      demandOption: false,
-    },
-    marketValue: {
-      alias: "v",
-      description: "Card Market Value",
-      type: "number",
-      demandOption: false,
-    },
-  },
-  (argv) => {
-    const cardHandler = new CardCollectionsHandler(argv.user);
-    // Gestionamos el Color, typeLine y rarity si se pasa
-    let cardToModify: ICard;
-    try{
-      cardToModify = cardHandler.getCard(argv.id);
-    } catch {
-      console.log(chalk.red("Card not found"));
-      return;
-    }
-
-    let newColor: Color = cardHandler.getCard(argv.id).color; 
-    if (argv.color) {
-      newColor = Color[argv.color as keyof typeof Color];
-      if (!newColor) {
-        console.log(chalk.red("Color not found"));
-        return;
-      }
-    }
-
-    let newTypeLine: TypeLine = cardHandler.getCard(argv.id).lineType;
-    if (argv.lineType) {
-      newTypeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
-      if (!newTypeLine) {
-        console.log(chalk.red("Type Line not found"));
-        return;
-      }
-    }
-
-    let newRarity: Rarity = cardHandler.getCard(argv.id).rarity;
-    if (argv.rarity) {
-      newRarity = Rarity[argv.rarity as keyof typeof Rarity];
-      if (!newRarity) {
-        console.log(chalk.red("Rarity not found"));
-        return;
-      }
-    }
-
-    const newCard: ICard = {
-      id: argv.id,
-      name: argv.name || cardToModify.name,
-      manaCost: argv.manaCost || cardToModify.manaCost,
-      color: newColor,
-      lineType: newTypeLine,
-      rarity: newRarity,
-      ruleText: argv.ruleText || cardToModify.ruleText,
-      strength: argv.strength || cardToModify.strength,
-      endurance: argv.endurance || cardToModify.endurance,
-      brandsLoyalty: argv.brandsLoyalty || cardToModify.brandsLoyalty,
-      marketValue: argv.marketValue || cardToModify.marketValue,
-    };
-
-    cardHandler.updateCard(newCard, argv.id);
-  },
-  )
-  .help()
   .argv;
+
