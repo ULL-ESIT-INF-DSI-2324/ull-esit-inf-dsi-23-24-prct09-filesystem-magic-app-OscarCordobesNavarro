@@ -1,97 +1,306 @@
-// import yargs from 'yargs';
-// import { hideBin } from 'yargs/helpers';
+import chalk from "chalk";
+import yargs from "yargs";
+import {hideBin} from "yargs/helpers";
+import { CardCollectionsHandler } from "./CardCollectionsHandler.js";
+import { ICard } from "./ICard.js";
+import { Color } from "./IColor.js";
+import { Rarity } from "./IRarity.js";
+import { TypeLine } from "./ITypeLine.js";
 
 
-// // De esta forma podemos definir varios comandos para nuestra aplicación
-// yargs(hideBin(process.argv))
-//   .command('add', 'Adds a card to the collection', {
-//   id: {
-//    description: 'Card ID',
-//    type: 'number',
-//    demandOption: true
-//   }
-//  }, (argv) => {
-//   console.log("ID: ", argv.id, " added to the collection ");
-//  })
-//  .command('sub', 'sub a card to the collection', {
-//   id: {
-//    description: 'Card ID',
-//    type: 'number',
-//    demandOption: true
-//   }
-//  }, (argv) => {
-//   console.log("ID: ", argv.id, " sub to the collection ");
-//  })
-//  .help()
-//  .argv;
+yargs(hideBin(process.argv))
+  .command(
+    "add",
+    "Add a card to the collection",
+    {
+      user: {
+        alias: "u",
+        description: "User Name",
+        type: "string",
+        demandOption: true,
+      },
+      id: {
+        alias: "i",
+        description: "Card ID",
+        type: "number",
+        demandOption: true,
+      },
+      name: {
+        alias: "n",
+        description: "Card Name",
+        type: "string",
+        demandOption: true,
+      },
+      manaCost: {
+        alias: "m",
+        description: "Card Mana Cost",
+        type: "number",
+        demandOption: true,
+      },
+      color: {
+        alias: "c",
+        description: "Card Color, use upper camel case",
+        type: "string",
+        demandOption: true,
+      },
+      lineType: {
+        alias: "l",
+        description: "Card Type Line",
+        type: "string",
+        demandOption: true,
+      },
+      rarity: {
+        alias: "r",
+        description: "Card Rarity",
+        type: "string",
+        demandOption: true,
+      },
+      ruleText: {
+        alias: "ruletext",
+        description: "Card Rule Text",
+        type: "string",
+        demandOption: true,
+      },
+      strength: {
+        alias: "s",
+        description: "Card Strength",
+        type: "number",
+        demandOption: false,
+      },
+      endurance: {
+        alias: "e",
+        description: "Card Endurance",
+        type: "number",
+        demandOption: false,
+      },
+      brandsLoyalty: {
+        alias: "b",
+        description: "Card Brands Loyalty",
+        type: "number",
+        demandOption: false,
+      },
+      marketValue: {
+        alias: "v",
+        description: "Card Market Value",
+        type: "number",
+        demandOption: true,
+      },
+    },
+    (argv) => {
+      const cardHandler = new CardCollectionsHandler(argv.user);
+      // Gestionamos el color pasando de la etiqueta a la variable que representa el enumerado
 
+      // Conseguimos el objeto Color a partir de la etiqueta argv.colo
+      const color = Color[argv.color as keyof typeof Color];
+      const typeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
+      const rarity = Rarity[argv.rarity as keyof typeof Rarity];
+      
+      console.log("Color:", color);
 
+      if (!color) {
+        console.log(chalk.red("Color not found"));
+        return;
+      }
 
-// //----- EJEMPLO paquete chalk -> Simplemente es un paquete para modificar el color de la consola y ya
+      if (!typeLine) {
+        console.log(chalk.red("Type Line not found"));
+        return;
+      }
 
-// import chalk from "chalk";
+      if (!rarity) {
+        console.log(chalk.red("Rarity not found"));
+        return;
+      }
 
-// const log = console.log;
+      cardHandler.addCard({
+        id: argv.id,
+        name: argv.name,
+        manaCost: argv.manaCost,
+        color: color,
+        lineType: typeLine,
+        rarity: rarity,
+        ruleText: argv.ruleText,
+        strength: argv.strength,
+        endurance: argv.endurance,
+        brandsLoyalty: argv.brandsLoyalty,
+        marketValue: argv.marketValue,
+      });
+    },
+  )
+  .command(
+    "remove",
+    "remove a card of the user collection",
+    {
+      user: {
+        alias: "u",
+        description: "User Name",
+        type: "string",
+        demandOption: true,
+      },
+      id: {
+        alias: "i",
+        description: "Card ID",
+        type: "number",
+        demandOption: true,
+      },
+    },
+    (argv) => {
+      const cardHandler = new CardCollectionsHandler(argv.user);
+      cardHandler.removeCard(argv.id);
+    },
+  )
+  .command(
+    "read",
+    "read a card of the user collection",
+    {
+      user: {
+        alias: "u",
+        description: "User Name",
+        type: "string",
+        demandOption: true,
+      },
+      id: {
+        alias: "i",
+        description: "Card ID",
+        type: "number",
+        demandOption: true,
+      },
+    },
+    (argv) => {
+      const cardHandler = new CardCollectionsHandler(argv.user);
+      cardHandler.readCard(argv.id);
+    },
+  ).command(
+    "update",
+    "update a card of the user collection",
+  {
+    user: {
+      alias: "u",
+      description: "User Name",
+      type: "string",
+      demandOption: true,
+    },
+    id: {
+      alias: "i",
+      description: "Card ID",
+      type: "number",
+      demandOption: true,
+    },
+    name: {
+      alias: "n",
+      description: "Card Name",
+      type: "string",
+      demandOption: false,
+    },
+    manaCost: {
+      alias: "m",
+      description: "Card Mana Cost",
+      type: "number",
+      demandOption: false,
+    },
+    color: {
+      alias: "c",
+      description: "Card Color, use upper camel case",
+      type: "string",
+      demandOption: false,
+    },
+    lineType: {
+      alias: "l",
+      description: "Card Type Line",
+      type: "string",
+      demandOption: false,
+    },
+    rarity: {
+      alias: "r",
+      description: "Card Rarity",
+      type: "string",
+      demandOption: false,
+    },
+    ruleText: {
+      alias: "ruletext",
+      description: "Card Rule Text",
+      type: "string",
+      demandOption: false,
+    },
+    strength: {
+      alias: "s",
+      description: "Card Strength",
+      type: "number",
+      demandOption: false,
+    },
+    endurance: {
+      alias: "e",
+      description: "Card Endurance",
+      type: "number",
+      demandOption: false,
+    },
+    brandsLoyalty: {
+      alias: "b",
+      description: "Card Brands Loyalty",
+      type: "number",
+      demandOption: false,
+    },
+    marketValue: {
+      alias: "v",
+      description: "Card Market Value",
+      type: "number",
+      demandOption: false,
+    },
+  },
+  (argv) => {
+    const cardHandler = new CardCollectionsHandler(argv.user);
+    // Gestionamos el Color, typeLine y rarity si se pasa
+    let cardToModify: ICard;
+    try{
+      cardToModify = cardHandler.getCard(argv.id);
+    } catch {
+      console.log(chalk.red("Card not found"));
+      return;
+    }
 
-// // Combine styled and normal strings
-// log(chalk.blue("Hello") + " World" + chalk.red("!"));
+    let newColor: Color = cardHandler.getCard(argv.id).color; 
+    if (argv.color) {
+      newColor = Color[argv.color as keyof typeof Color];
+      if (!newColor) {
+        console.log(chalk.red("Color not found"));
+        return;
+      }
+    }
 
-// // Compose multiple styles using the chainable API
-// log(chalk.blue.bgRed.bold("Hello world!"));
+    let newTypeLine: TypeLine = cardHandler.getCard(argv.id).lineType;
+    if (argv.lineType) {
+      newTypeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
+      if (!newTypeLine) {
+        console.log(chalk.red("Type Line not found"));
+        return;
+      }
+    }
 
-// // Pass in multiple arguments
-// log(chalk.blue("Hello", "World!", "Foo", "bar", "biz", "baz"));
+    let newRarity: Rarity = cardHandler.getCard(argv.id).rarity;
+    if (argv.rarity) {
+      newRarity = Rarity[argv.rarity as keyof typeof Rarity];
+      if (!newRarity) {
+        console.log(chalk.red("Rarity not found"));
+        return;
+      }
+    }
 
-// // Nest styles
-// log(chalk.red("Hello", chalk.underline.bgBlue("world") + "!"));
+    const newCard: ICard = {
+      id: argv.id,
+      name: argv.name || cardToModify.name,
+      manaCost: argv.manaCost || cardToModify.manaCost,
+      color: newColor,
+      lineType: newTypeLine,
+      rarity: newRarity,
+      ruleText: argv.ruleText || cardToModify.ruleText,
+      strength: argv.strength || cardToModify.strength,
+      endurance: argv.endurance || cardToModify.endurance,
+      brandsLoyalty: argv.brandsLoyalty || cardToModify.brandsLoyalty,
+      marketValue: argv.marketValue || cardToModify.marketValue,
+    };
 
-// // Nest styles of the same type even (color, underline, background)
-// log(
-//   chalk.green(
-//     "I am a green line " +
-//       chalk.blue.underline.bold("with a blue substring") +
-//       " that becomes green again!"
-//   )
-// );
-
-// -----------------------
-import chalk from 'chalk';
-import { CardCollectionsHandler } from './CardCollectionsHandler.js';
-import { ICard, Color, TypeLine, Rarity } from './ICard.js';
-
-const card: ICard = {
-  id: 20,
-  name: 'Oscar',
-  manaCost: 2,
-  color: Color.Black,
-  lineType: TypeLine.Creature,
-  rarity: Rarity.Comun,
-  ruleText: 'Texto de reglas',
-  marketValue: 2
-};
-const card2: ICard = {
-  id: 2,
-  name: 'Oscar',
-  manaCost: 2,
-  color: Color.Black,
-  lineType: TypeLine.Creature,
-  rarity: Rarity.Comun,
-  ruleText: 'Texto de reglas',
-  marketValue: 2
-};
-
-const cardHandler = new CardCollectionsHandler('oscar');
-// cardHandler.addCard(card);
-// cardHandler.addCard(card2);
-
-// cardHandler.removeCard(1);
-// cardHandler.removeCard(1);
-
-// cardHandler.readCard(1);
-
-// cardHandler.readCard(6);
-
-cardHandler.listCollection();
-
-
-
+    cardHandler.updateCard(newCard, argv.id);
+  },
+  )
+  .help()
+  .argv;
