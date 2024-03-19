@@ -1,0 +1,182 @@
+[
+ {
+  "id": 1,
+  "name": "Fireball",
+  "manaCost": 3,
+  "color": "FF0000",
+  "lineType": "Instant",
+  "rarity": "Common",
+  "ruleText": "Fireball deals 3 damage to any target.",
+  "marketValue": 1.5
+ },
+ {
+  "id": 2,
+  "name": "Elvish Mystic",
+  "manaCost": 1,
+  "color": "00FF00",
+  "lineType": "Creature - Elf Druid",
+  "rarity": "Common",
+  "ruleText": "{T}: Add {G} to your mana pool.",
+  "strength": 1,
+  "endurance": 1,
+  "marketValue": 0.75
+ },
+ {
+  "id": 3,
+  "name": "Divine Favor",
+  "manaCost": 2,
+  "color": "FFFFFF",
+  "lineType": "Enchantment - Aura",
+  "rarity": "Common",
+  "ruleText": "Enchant creature\nEnchanted creature gets +1/+3.",
+  "marketValue": 0.4
+ },
+ {
+  "id": 4,
+  "name": "Counterspell",
+  "manaCost": 2,
+  "color": "0000FF",
+  "lineType": "Instant",
+  "rarity": "Uncommon",
+  "ruleText": "Counter target spell.",
+  "marketValue": 2
+ },
+ {
+  "id": 5,
+  "name": "Goblin Chainwhirler",
+  "manaCost": 3,
+  "color": "FF0000",
+  "lineType": "Creature - Goblin Warrior",
+  "rarity": "Rare",
+  "ruleText": "First strike\nWhen Goblin Chainwhirler enters the battlefield, it deals 1 damage to each opponent and each creature and planeswalker they control.",
+  "strength": 3,
+  "endurance": 3,
+  "marketValue": 5
+ },
+ {
+  "id": 6,
+  "name": "Llanowar Elves",
+  "manaCost": 1,
+  "color": "00FF00",
+  "lineType": "Creature - Elf Druid",
+  "rarity": "Common",
+  "ruleText": "{T}: Add {G} to your mana pool.",
+  "strength": 1,
+  "endurance": 1,
+  "marketValue": 1
+ },
+ {
+  "id": 7,
+  "name": "Serra Angel",
+  "manaCost": 4,
+  "color": "FFFFFF",
+  "lineType": "Creature - Angel",
+  "rarity": "Uncommon",
+  "ruleText": "Flying, vigilance",
+  "strength": 4,
+  "endurance": 4,
+  "marketValue": 2.5
+ },
+ {
+  "id": 8,
+  "name": "Opt",
+  "manaCost": 1,
+  "color": "0000FF",
+  "lineType": "Instant",
+  "rarity": "Common",
+  "ruleText": "Scry 1. (Look at the top card of your library. You may put that card on the bottom of your library.)\nDraw a card.",
+  "marketValue": 1.25
+ },
+ {
+  "id": 9,
+  "name": "Lightning Bolt",
+  "manaCost": 1,
+  "color": "FF0000",
+  "lineType": "Instant",
+  "rarity": "Common",
+  "ruleText": "Lightning Bolt deals 3 damage to any target.",
+  "marketValue": 2
+ },
+ {
+  "id": 10,
+  "name": "Giant Growth",
+  "manaCost": 1,
+  "color": "00FF00",
+  "lineType": "Instant",
+  "rarity": "Common",
+  "ruleText": "Target creature gets +3/+3 until end of turn.",
+  "marketValue": 0.5
+ },
+ {
+  "id": 11,
+  "name": "Wrath of God",
+  "manaCost": 4,
+  "color": "FFFFFF",
+  "lineType": "Sorcery",
+  "rarity": "Rare",
+  "ruleText": "Destroy all creatures. They can't be regenerated.",
+  "marketValue": 8
+ },
+ {
+  "id": 12,
+  "name": "Ancestral Recall",
+  "manaCost": 1,
+  "color": "0000FF",
+  "lineType": "Instant",
+  "rarity": "Mythic",
+  "ruleText": "Target player draws three cards.",
+  "marketValue": 100
+ },
+ {
+  "id": 13,
+  "name": "Shivan Dragon",
+  "manaCost": 6,
+  "color": "FF0000",
+  "lineType": "Creature - Dragon",
+  "rarity": "Rare",
+  "ruleText": "Flying\n{R}: Shivan Dragon gets +1/+0 until end of turn.",
+  "strength": 5,
+  "endurance": 5,
+  "marketValue": 7.5
+ },
+ {
+  "id": 14,
+  "name": "Gaea's Cradle",
+  "manaCost": 0,
+  "color": "00FF00",
+  "lineType": "Legendary Land",
+  "rarity": "Mythic",
+  "ruleText": "{T}: Add {G} for each creature you control.",
+  "marketValue": 300
+ },
+ {
+  "id": 15,
+  "name": "Swords to Plowshares",
+  "manaCost": 1,
+  "color": "FFFFFF",
+  "lineType": "Instant",
+  "rarity": "Uncommon",
+  "ruleText": "Exile target creature. Its controller gains life equal to its power.",
+  "marketValue": 3
+ },
+ {
+  "id": 16,
+  "name": "Serum Visions",
+  "manaCost": 1,
+  "color": "0000FF",
+  "lineType": "Sorcery",
+  "rarity": "Uncommon",
+  "ruleText": "Draw a card. Scry 2. (Look at the top two cards of your library, then put any number of them on the bottom of your library and the rest on top in any order.)",
+  "marketValue": 2.5
+ },
+ {
+  "id": 20,
+  "name": "Oscar",
+  "manaCost": 2,
+  "color": "000000",
+  "lineType": "Creature",
+  "rarity": "comun",
+  "ruleText": "Texto de reglas",
+  "marketValue": 2
+ }
+]
