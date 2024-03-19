@@ -108,6 +108,12 @@ export class CardCollectionsHandler {
     if (this.userCollection.length === 0) {
       console.log(chalk.red("empty collection"));
       return;
+    } else {
+      console.log(chalk.green.bold("Collection of " + this.userName + ":"));
+      this.userCollection.forEach((card) => {
+        console.log("---------------------------------\n");
+        this.printCard(card);
+      });
     }
   }
 

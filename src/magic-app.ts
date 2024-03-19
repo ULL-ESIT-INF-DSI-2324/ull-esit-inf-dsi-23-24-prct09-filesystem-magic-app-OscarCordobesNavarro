@@ -87,9 +87,11 @@ const cardHandler = new CardCollectionsHandler('oscar');
 // cardHandler.removeCard(1);
 // cardHandler.removeCard(1);
 
-cardHandler.readCard(1);
+// cardHandler.readCard(1);
 
-cardHandler.readCard(6);
+// cardHandler.readCard(6);
+
+cardHandler.listCollection();
 
 
 

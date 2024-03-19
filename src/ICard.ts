@@ -34,10 +34,10 @@ export enum TypeLine {
 // Enumerado para el campo 'Rareza'
 // Enumerado para el campo 'Rareza'
 export enum Rarity {
-  Comun = "comun",
-  Infrecuente = "infrecuente",
-  Rara = "rara",
-  Mitica = "mítica",
+  Common = "Common",
+  Uncommon = "Uncommon",
+  Rare = "Rare",
+  Mythical = "Mythical",
 }
 
 // Definición de la interfaz para una carta
