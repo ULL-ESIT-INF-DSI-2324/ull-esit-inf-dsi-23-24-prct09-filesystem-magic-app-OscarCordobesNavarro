@@ -9,48 +9,68 @@
  * Fecha: 18/03/2024
  * Práctica 9: Clases e interfaces genéricas. Principios SOLID
  */
+import { Color } from "./IColor.js";
+import { Rarity } from "./IRarity.js";
+import { TypeLine } from "./ITypeLine.js";
 
-export enum Color {
-  White = "FFFFFF",
-  Blue = "0000FF",
-  Black = "000000",
-  Red = "FF0000",
-  Green = "00FF00",
-  Colorless = "colorless",
-  Multicolor = "multicolor",
-}
 
-// Enumerado para el campo 'Línea de Tipo'
-export enum TypeLine {
-  Land = "Land",
-  Creature = "Creature",
-  Enchantment = "Enchantment",
-  Sorcery = "Sorcery",
-  Instant = "Instant",
-  Artifact = "Artifact",
-  Planeswalker = "Planeswalker",
-}
-
-// Enumerado para el campo 'Rareza'
-// Enumerado para el campo 'Rareza'
-export enum Rarity {
-  Common = "Common",
-  Uncommon = "Uncommon",
-  Rare = "Rare",
-  Mythical = "Mythical",
-}
-
-// Definición de la interfaz para una carta
+/**
+ * Interfaz que representa una carta del juego.
+ */
 export interface ICard {
+  /**
+   * Identificador de la carta.
+   * @type {number}
+   */
   id: number;
+  /**
+   * Nombre de la carta.
+   * @type {string}
+   */
   name: string;
+  /**
+   * Coste de maná de la carta.
+   * @type {number}
+   */
   manaCost: number;
+  /**
+   * Color de la carta.
+   * @type {Color}
+   */
   color: Color;
+  /**
+   * Tipo de línea de la carta.
+   * @type {TypeLine}
+   */
   lineType: TypeLine;
+  /**
+   * Rareza de la carta.
+   * @type {Rarity}
+   */
   rarity: Rarity;
+  /**
+   * Texto de reglas de la carta.
+   * @type {string}
+   */
   ruleText: string;
+  /**
+   * Fuerza de la carta.
+   * @type {number}
+   */
   strength?: number;
+  /**
+   * Resistencia de la carta.
+   * @type {number}
+   */
   endurance?: number;
+  /**
+   * Lealtad de la carta.
+   * @type {number}
+   */
   brandsLoyalty?: number;
+  /**
+   * Valor de mercado de la carta.
+   * @type {number}
+   */
   marketValue: number;
 }
