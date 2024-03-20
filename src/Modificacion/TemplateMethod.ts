@@ -47,7 +47,7 @@ class JSONProcessor extends Processor {
     public readTheFile(): void {
         try {
             this.data = JSON.parse(fs.readFileSync('./src/Modificacion/elements.json', 'utf-8'));
-            this.data[0].elements.forEach((element: Element) => {
+            this.data[0].elements.forEach((element: any) => { // Update the type annotation to 'any'
                 this.benefits.push(element.benefit);
                 this.weights.push(element.weight);
             });
