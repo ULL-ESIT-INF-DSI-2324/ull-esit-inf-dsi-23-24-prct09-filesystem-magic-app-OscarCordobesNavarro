@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import yargs, { Argv } from "yargs";
+import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { CardCollectionsHandler } from "./CardCollectionsHandler.js";
 import { ICard } from "./ICard.js";
@@ -88,7 +88,6 @@ yargs(hideBin(process.argv))
     (argv) => {
       const cardHandler = new CardCollectionsHandler(argv.user);
       // Gestionamos el color pasando de la etiqueta a la variable que representa el enumerado
-
       // Conseguimos el objeto Color a partir de la etiqueta argv.colo
       const color = Color[argv.color as keyof typeof Color];
       const typeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
