@@ -200,7 +200,7 @@ yargs(hideBin(process.argv))
     (argv) => {
       const cardHandler = new CardCollectionsHandler(argv.user);
       try {
-        cardHandler.readCard(argv.id);
+        cardHandler.showCard(argv.id);
       } catch(error) {
         console.log(chalk.red(error.message));
         return;
