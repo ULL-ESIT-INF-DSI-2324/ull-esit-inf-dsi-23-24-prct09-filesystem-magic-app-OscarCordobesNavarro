@@ -12,12 +12,14 @@
 
 import { ICard } from "./ICard.js";
 import { Color } from "./IColor.js";
-import fs, { readFileSync } from "fs";
+import fs from "fs";
 import chalk from "chalk";
-
 
 /**
  * Clase que se encarga de gestionar las colecciones de cartas
+ *
+ * A partir de una ruta de archivo, se pueden añadir, eliminar, leer, actualizar y listar cartas.
+ * En formato JSON
  */
 export class CardCollectionsHandler {
   private userCollectionPath: string = "./data/";
@@ -31,7 +33,22 @@ export class CardCollectionsHandler {
     }
   }
 
-  
+  /**
+   * Devuelve la ruta de la colección del usuario.
+   * @returns La ruta de la colección del usuario.
+   */
+  public getUserCollectionPath(): string {
+    return this.userCollectionPath;
+  }
+
+  /**
+   * Devuelve el nombre de usuario.
+   * @returns El nombre de usuario.
+   */
+  public getUserName(): string {
+    return this.userName;
+  }
+
   /**
    * Actualiza el usuario y la ruta de la colección de usuario.
    * @param newUser El nuevo nombre de usuario.
@@ -52,7 +69,6 @@ export class CardCollectionsHandler {
     this.userCollection = [];
   }
 
-  
   /**
    * Lee la colección de cartas desde el archivo especificado.
    * Si el archivo no existe, se crea y se inicializa con un array vacío.
@@ -76,7 +92,6 @@ export class CardCollectionsHandler {
     fs.writeFileSync(this.userCollectionPath, JSON.stringify(data, null, 1));
   }
 
-  
   /**
    * Añade una tarjeta a la colección del usuario.
    * @param card La tarjeta que se va a añadir.
@@ -86,19 +101,19 @@ export class CardCollectionsHandler {
     try {
       this.readCollection();
     } catch (error) {
-      console.log(chalk.red("collection not found"));
+      throw new Error("Collection not found");
     }
     if (this.userCollection.find((c) => c.id === card.id)) {
-      console.log(
-        chalk.red("card already exists at " + this.userName + " collection"),
+      throw new Error(
+        "card already exists at " + this.userName + " collection",
       );
-      return;
     } else {
+      try {
         this.userCollection.push(card);
         this.writeCollection(this.userCollection);
-        console.log(
-            chalk.green.bold("card added to " + this.userName + " collection"),
-        );
+      } catch (error) {
+        return error;
+      }
     }
   }
 
@@ -111,21 +126,18 @@ export class CardCollectionsHandler {
     try {
       this.readCollection();
     } catch (error) {
-      console.log(chalk.red("collection not found"));
-      return;
+      throw new Error("Collection not found");
     }
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
-      console.log(
-        chalk.red("card not found at " + this.userName + " collection"),
-      );
-      return;
+      throw new Error("Card not found at " + this.userName + " collection");
     } else {
-      this.userCollection.splice(index, 1);
-      this.writeCollection(this.userCollection);
-      console.log(
-        chalk.green.bold("card removed from " + this.userName + " collection"),
-      );
+      try {
+        this.userCollection.splice(index, 1);
+        this.writeCollection(this.userCollection);
+      } catch (error) {
+        return error;
+      }
     }
   }
 
@@ -138,16 +150,13 @@ export class CardCollectionsHandler {
     try {
       this.readCollection();
     } catch (error) {
-      console.log(chalk.red("collection not found"));
-      return
+      return error;
     }
     const card = this.userCollection.find((card) => card.id === id);
     if (card) {
-        this.printCard(card);
+      this.printCard(card);
     } else {
-      console.log(
-        chalk.red.bold("card not found at " + this.userName + " collection"),
-      );
+      throw new Error("Card not found");
     }
   }
 
@@ -166,16 +175,14 @@ export class CardCollectionsHandler {
     }
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
-      console.log(
-        chalk.red.bold("card not found at " + this.userName + " collection"),
-      );
-      return;
+      throw new Error("Card not found at " + this.userName + " collection");
     } else {
       this.userCollection[index] = card;
-      this.writeCollection(this.userCollection);
-      console.log(
-        chalk.green.bold("card updated at " + this.userName + " collection"),
-      );
+      try {
+        this.writeCollection(this.userCollection);
+      } catch(error) {
+        return error;
+      }
     }
   }
 
@@ -191,8 +198,7 @@ export class CardCollectionsHandler {
       return;
     }
     if (this.userCollection.length === 0) {
-      console.log(chalk.red("empty collection"));
-      return;
+      throw new Error("Collection is empty");
     } else {
       console.log(chalk.green.bold("Collection of " + this.userName + ":"));
       this.userCollection.forEach((card) => {
@@ -208,7 +214,9 @@ export class CardCollectionsHandler {
    * @returns void
    */
   private printCard(card: ICard) {
-    const colorName = Object.keys(Color).find(key => Color[key as keyof typeof Color] === card.color);
+    const colorName = Object.keys(Color).find(
+      (key) => Color[key as keyof typeof Color] === card.color,
+    );
     console.log(
       "\n " + chalk.blue.bold("Card ID: ") + card.id + "\n",
       chalk.blue.bold("Card Name: ") + card.name + "\n",
@@ -237,10 +245,7 @@ export class CardCollectionsHandler {
     if (card) {
       return card;
     } else {
-      console.log(
-        chalk.red.bold("card not found at " + this.userName + " collection"),
-      );
-      throw new Error("Card not found");
+      throw new Error("Card not found at " + this.userName + " collection");
     }
   }
 }

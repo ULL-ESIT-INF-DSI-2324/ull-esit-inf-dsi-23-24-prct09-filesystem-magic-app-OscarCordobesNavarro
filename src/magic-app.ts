@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Asignatura: Desarrollo de Sistemas Informáticos
+ * Curso: 3º
+ * Autor: Óscar Cordobés Navarro
+ * Correo: alu0101478081@ull.edu.es
+ * Fecha: 18/03/2024
+ * Práctica 9: Clases e interfaces genéricas. Principios SOLID
+ */
+
 import chalk from "chalk";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -7,6 +19,19 @@ import { Color } from "./IColor.js";
 import { Rarity } from "./IRarity.js";
 import { TypeLine } from "./ITypeLine.js";
 
+
+/**
+ * Función principal que gestiona los comandos de la aplicación
+ * 
+ * Tiene los comandos:
+ * - add: Añade una carta a la colección del usuario
+ * - remove: Elimina una carta de la colección del usuario
+ * - read: Lee una carta de la colección del usuario
+ * - update: Actualiza una carta de la colección del usuario
+ * - list: Lista todas las cartas de la colección del usuario
+ * 
+ * Para mas informacion sobre los comandos y sus opciones, ejecutar el comando --help
+ */
 yargs(hideBin(process.argv))
   .command(
     "add",
@@ -87,13 +112,9 @@ yargs(hideBin(process.argv))
     },
     (argv) => {
       const cardHandler = new CardCollectionsHandler(argv.user);
-      // Gestionamos el color pasando de la etiqueta a la variable que representa el enumerado
-      // Conseguimos el objeto Color a partir de la etiqueta argv.colo
       const color = Color[argv.color as keyof typeof Color];
       const typeLine = TypeLine[argv.lineType as keyof typeof TypeLine];
       const rarity = Rarity[argv.rarity as keyof typeof Rarity];
-
-      console.log("Color:", color);
 
       if (!color) {
         console.log(chalk.red("Color not found"));
@@ -110,24 +131,30 @@ yargs(hideBin(process.argv))
         return;
       }
 
-      cardHandler.addCard({
-        id: argv.id,
-        name: argv.name,
-        manaCost: argv.manaCost,
-        color: color,
-        lineType: typeLine,
-        rarity: rarity,
-        ruleText: argv.ruleText,
-        strength: argv.strength,
-        endurance: argv.endurance,
-        brandsLoyalty: argv.brandsLoyalty,
-        marketValue: argv.marketValue,
-      });
+      try {
+        cardHandler.addCard({
+          id: argv.id,
+          name: argv.name,
+          manaCost: argv.manaCost,
+          color: color,
+          lineType: typeLine,
+          rarity: rarity,
+          ruleText: argv.ruleText,
+          strength: argv.strength,
+          endurance: argv.endurance,
+          brandsLoyalty: argv.brandsLoyalty,
+          marketValue: argv.marketValue,
+        });
+        console.log(chalk.green("Card added to " + argv.user + " collection"));
+      } catch(error) {
+        console.log(chalk.red(error.message));
+        return;
+      }
     },
   )
   .command(
     "remove",
-    "remove a card of the user collection",
+    "Remove a card of the user collection",
     {
       user: {
         alias: "u",
@@ -144,12 +171,18 @@ yargs(hideBin(process.argv))
     },
     (argv) => {
       const cardHandler = new CardCollectionsHandler(argv.user);
-      cardHandler.removeCard(argv.id);
+      try {
+        cardHandler.removeCard(argv.id);
+        console.log(chalk.green("Card removed from " + argv.user + " collection"));
+      } catch(error) {
+        console.log(chalk.red(error.message));
+        return;
+      }
     },
   )
   .command(
     "read",
-    "read a card of the user collection",
+    "Read a card of the user collection",
     {
       user: {
         alias: "u",
@@ -166,11 +199,16 @@ yargs(hideBin(process.argv))
     },
     (argv) => {
       const cardHandler = new CardCollectionsHandler(argv.user);
-      cardHandler.readCard(argv.id);
+      try {
+        cardHandler.readCard(argv.id);
+      } catch(error) {
+        console.log(chalk.red(error.message));
+        return;
+      }
     },
   ).command(
     "update",
-    "update a card of the user collection",
+    "Update a card of the user collection",
   {
     user: {
       alias: "u",
@@ -297,8 +335,34 @@ yargs(hideBin(process.argv))
       marketValue: argv.marketValue || cardToModify.marketValue,
     };
 
-    cardHandler.updateCard(newCard, argv.id);
-  },
+    try {
+      cardHandler.updateCard(newCard, argv.id);
+      console.log(chalk.green("Card updated at " + argv.user + " collection"));
+    } catch(error) {
+      console.log(chalk.red(error.message));
+      return;
+    }
+  }
+  ).command(
+    "list",
+    "List all cards of the user collection",
+    {
+      user: {
+        alias: "u",
+        description: "User Name",
+        type: "string",
+        demandOption: true,
+      },
+    },
+    (argv) => {
+      const cardHandler = new CardCollectionsHandler(argv.user);
+      try {
+        cardHandler.listCollection();
+      } catch(error) {
+        console.log(chalk.red(error.message));
+        return;
+      }
+    },
   )
   .help()
   .argv;
