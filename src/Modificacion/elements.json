@@ -1,0 +1,18 @@
+[
+    {
+        "capacity": 15,
+        "numElements": 2,
+        "elements": [
+            {
+                "idElement": 1,
+                "weight": 5,
+                "benefit": 10
+            },
+            {
+                "idElement": 2,
+                "weight": 10,
+                "benefit": 20
+            }
+        ]
+    }
+]
