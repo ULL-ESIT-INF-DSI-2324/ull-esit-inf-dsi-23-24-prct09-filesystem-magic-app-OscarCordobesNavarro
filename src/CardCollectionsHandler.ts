@@ -108,6 +108,12 @@ export class CardCollectionsHandler {
         "Card already exists at " + this.userName + " collection",
       );
     } else {
+      if(card.lineType === "Creature" && (!card.strength || !card.endurance)) {
+        throw new Error("Creature card must have strength and endurance");
+      }
+      if(card.lineType === "Planeswalker" && !card.brandsLoyalty) {
+        throw new Error("Planeswalker card must have brands loyalty");
+      }
       this.userCollection.push(card);
       this.writeCollection(this.userCollection);
     }
