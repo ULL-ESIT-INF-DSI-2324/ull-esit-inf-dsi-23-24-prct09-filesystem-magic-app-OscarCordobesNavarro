@@ -1,4 +1,4 @@
-# 💻 Práctica 9 - Aplicación para coleccionistas de cartas Magic 💻
+
 
 <p align="center">
   <a href="https://github.com/ULL-ESIT-INF-DSI-2324/ull-esit-inf-dsi-23-24-prct09-filesystem-magic-app-OscarCordobesNavarro/actions/workflows/node.js.yml">
