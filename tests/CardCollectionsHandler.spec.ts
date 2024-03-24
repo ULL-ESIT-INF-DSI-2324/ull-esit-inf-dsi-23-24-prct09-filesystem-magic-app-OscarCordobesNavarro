@@ -149,6 +149,44 @@ describe("CardCollectionsHandler tests", () => {
                 expect(error.message).to.be.equal("Collection not found");
             }
         });
+
+        it("add a card that is a creature without strength and endurance should throw an error", () => {
+            const cardHandler = new CardCollectionsHandler("testUser");
+            const carta: ICard = {
+                id: 1,
+                name: "testCard",
+                manaCost: 1,
+                color: Color.Red,
+                lineType: TypeLine.Creature,
+                rarity: Rarity.Common,
+                ruleText: "test rule text",
+                strength: 1,
+                endurance: 0,
+                brandsLoyalty: 7,
+                marketValue: 1,
+            };
+            cardHandler.clearCollection();
+            expect(() => cardHandler.addCard(carta)).to.throw("Creature card must have strength and endurance");
+        });
+
+        it("add a card that is a planeswalker without brands loyalty should throw an error", () => {
+            const cardHandler = new CardCollectionsHandler("testUser");
+            const carta: ICard = {
+                id: 1,
+                name: "testCard",
+                manaCost: 1,
+                color: Color.Red,
+                lineType: TypeLine.Planeswalker,
+                rarity: Rarity.Common,
+                ruleText: "test rule text",
+                strength: 1,
+                endurance: 1,
+                brandsLoyalty: 0,
+                marketValue: 1,
+            };
+            cardHandler.clearCollection();
+            expect(() => cardHandler.addCard(carta)).to.throw("Planeswalker card must have brands loyalty");
+        });
     });
 
     describe("updateCard methodtests", () => {
