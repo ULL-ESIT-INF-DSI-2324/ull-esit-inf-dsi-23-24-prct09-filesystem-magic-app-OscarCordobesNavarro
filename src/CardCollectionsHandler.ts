@@ -30,7 +30,7 @@ export class CardCollectionsHandler {
    * Devuelve la ruta de la colección del usuario.
    * @returns La ruta de la colección del usuario.
    */
-  public getUserCollectionPath(): string {
+  public getUserCollectionDirectory(): string {
     return this.userDirectory;
   }
 
