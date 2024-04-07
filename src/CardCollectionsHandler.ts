@@ -78,9 +78,10 @@ export class CardCollectionsHandler {
     // Asegurarse de que el archivo existe
     if (!fs.existsSync(this.userCollectionPath)) {
       throw new Error("Collection not found");
+    } else {
+      const data = fs.readFileSync(this.userCollectionPath, "utf-8");
+      this.userCollection = JSON.parse(data);
     }
-    const data = fs.readFileSync(this.userCollectionPath, "utf-8");
-    this.userCollection = JSON.parse(data);
   }
 
   /**
@@ -98,11 +99,7 @@ export class CardCollectionsHandler {
    * @returns void
    */
   public addCard(card: ICard): void {
-    try {
-      this.readCollection();
-    } catch (error) {
-      throw new Error("Collection not found");
-    }
+    this.readCollection();
     if (this.userCollection.find((c) => c.id === card.id)) {
       throw new Error(
         "Card already exists at " + this.userName + " collection",
@@ -125,11 +122,7 @@ export class CardCollectionsHandler {
    * @returns void
    */
   public removeCard(id: number): void {
-    try {
-      this.readCollection();
-    } catch (error) {
-      throw new Error("Collection not found");
-    }
+    this.readCollection();
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
       throw new Error("Card not found at " + this.userName + " collection");
@@ -145,11 +138,7 @@ export class CardCollectionsHandler {
    * @returns void
    */
   public showCard(id: number): void {
-    try {
-      this.readCollection();
-    } catch (error) {
-      return error;
-    }
+    this.readCollection();
     const card = this.userCollection.find((card) => card.id === id);
     if (card) {
       this.printCard(card);
@@ -168,11 +157,7 @@ export class CardCollectionsHandler {
     if (card.id !== id) {
       throw new Error("Card ID and parameter ID do not match");
     }
-    try {
-      this.readCollection();
-    } catch (error) {
-      return error;
-    }
+    this.readCollection();
     const index = this.userCollection.findIndex((card) => card.id === id);
     if (index === -1) {
       throw new Error("Card not found at " + this.userName + " collection");
@@ -187,12 +172,7 @@ export class CardCollectionsHandler {
    * @returns void
    */
   public listCollection(): void {
-    try {
-      this.readCollection();
-    } catch (error) {
-      console.log(chalk.red("collection not found"));
-      return;
-    }
+    this.readCollection();
     if (this.userCollection.length === 0) {
       throw new Error("Collection is empty");
     } else {
@@ -209,7 +189,7 @@ export class CardCollectionsHandler {
    * @param card La tarjeta que se va a imprimir.
    * @returns void
    */
-  private printCard(card: ICard) {
+  private printCard(card: ICard): void {
     const colorName = Object.keys(Color).find(
       (key) => Color[key as keyof typeof Color] === card.color,
     );
@@ -231,11 +211,7 @@ export class CardCollectionsHandler {
    * @returns La tarjeta que se ha obtenido ICard.
    */
   public getCard(id: number): ICard {
-    try {
-      this.readCollection();
-    } catch (error) {
-      return error;
-    }
+    this.readCollection();
     const card = this.userCollection.find((card) => card.id === id);
     if (card) {
       return card;

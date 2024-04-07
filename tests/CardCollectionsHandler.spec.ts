@@ -296,6 +296,28 @@ describe("CardCollectionsHandler tests", () => {
                 expect(error.message).to.be.equal("Collection not found");
             }
         });
+
+        it ("update a card from a user that doesn't exist should throw an error", () => {
+            const cardHandler = new CardCollectionsHandler("exampleUser");
+            const carta: ICard = {
+                id: 1,
+                name: "testCard",
+                manaCost: 1,
+                color: Color.Red,
+                lineType: TypeLine.Artifact,
+                rarity: Rarity.Common,
+                ruleText: "test rule text",
+                strength: 1,
+                endurance: 1,
+                brandsLoyalty: 7,
+                marketValue: 1,
+            };
+            try {
+                cardHandler.updateCard(carta, 1);
+            } catch(error) {
+                expect(error.message).to.be.equal("Collection not found");
+            }
+        });
     });
 
     describe("showCard method tests", () => {

@@ -289,8 +289,8 @@ yargs(hideBin(process.argv))
     let cardToModify: ICard;
     try{
       cardToModify = cardHandler.getCard(argv.id);
-    } catch {
-      console.log(chalk.red("Card not found"));
+    } catch (error) {
+      console.log(chalk.red(error.message));
       return;
     }
 
