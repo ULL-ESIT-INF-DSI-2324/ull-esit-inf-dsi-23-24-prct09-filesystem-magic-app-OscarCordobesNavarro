@@ -22,7 +22,7 @@ describe("CardCollectionsHandler tests", () => {
         it("updateUser('testUser') returns userCollectionPath 'data/testUser'", () => {
             const cardHandler = new CardCollectionsHandler("testUser");
             cardHandler.updateUser("testUser");
-            expect(cardHandler.getUserCollectionPath()).to.be.equal("data\\testUser");
+            expect(cardHandler.getUserCollectionPath()).to.be.equal("data/testUser");
         });
     });
 
