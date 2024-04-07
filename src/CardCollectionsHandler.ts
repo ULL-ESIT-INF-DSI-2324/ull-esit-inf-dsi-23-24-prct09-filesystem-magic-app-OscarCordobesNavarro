@@ -99,7 +99,13 @@ export class CardCollectionsHandler {
    * @returns void
    */
   public addCard(card: ICard): void {
-    this.readCollection();
+    try {
+      this.readCollection();
+    } catch {
+      this.userCollection.push(card);
+      this.writeCollection(this.userCollection);
+      return;
+    }
     if (this.userCollection.find((c) => c.id === card.id)) {
       throw new Error(
         "Card already exists at " + this.userName + " collection",
