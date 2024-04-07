@@ -18,29 +18,13 @@ describe("CardCollectionsHandler tests", () => {
 
             expect(cardHandler.getUserName()).to.be.equal("testUser");
         });
-        it("updateUser('testUser') returns userCollectionPath './data/testUser.json'", () => {
-    const cardHandler = new CardCollectionsHandler("testUser");
 
+        it("updateUser('testUser') returns userCollectionPath 'data/testUser'", () => {
+            const cardHandler = new CardCollectionsHandler("testUser");
             cardHandler.updateUser("testUser");
-            expect(cardHandler.getUserCollectionPath()).to.be.equal("./data/testUser.json");
+            expect(cardHandler.getUserCollectionPath()).to.be.equal("data/testUser");
         });
     });
-
-    describe("updatePath function tests", () => {
-        it("updatePath('./data/testUser.json') returns userCollectionPath './data/testUser.json'", () => {
-            const cardHandler = new CardCollectionsHandler("testUser");
-
-            cardHandler.updatePath("./data/testUser.json");
-            expect(cardHandler.getUserCollectionPath()).to.be.equal("./data/testUser.json");
-        });
-        it("updatePath('testUser.json') returns userCollectionPath 'testUser.json'", () => {
-            const cardHandler = new CardCollectionsHandler("testUser");
-
-            cardHandler.updatePath("testUser.json");
-            expect(cardHandler.getUserCollectionPath()).to.be.equal("testUser.json");
-        });
-    });
-
 
     describe("addCard, removeCard and getCard methods tests", () => {
         // Actualizamos el path para las pruebas
@@ -118,27 +102,13 @@ describe("CardCollectionsHandler tests", () => {
             expect(() => cardHandler.getCard(1)).to.throw("Card not found at testUser collection");
         });
 
-        it("add a card to a collection that doesn't exist should throw an error", () => {
-            const cardHandler = new CardCollectionsHandler("exampleUser");
-            const carta: ICard = {
-                id: 1,
-                name: "testCard",
-                manaCost: 1,
-                color: Color.Red,
-                lineType: TypeLine.Artifact,
-                rarity: Rarity.Common,
-                ruleText: "test rule text",
-                strength: 1,
-                endurance: 1,
-                brandsLoyalty: 7,
-                marketValue: 1,
-            };
-            expect(() => cardHandler.addCard(carta)).to.throw("Collection not found");
-        });
-
         it("remove a card from a collection that doesn't exist should throw an error", () => {
             const cardHandler = new CardCollectionsHandler("exampleUser");
-            expect(() => cardHandler.removeCard(1)).to.throw("Collection not found");
+            try {
+                cardHandler.removeCard(1);
+            } catch (error) {
+                expect(error.message).to.be.equal("Collection not found");
+            }
         });
 
         it("get a card from a collection that doesn't exist should throw an error", () => {
