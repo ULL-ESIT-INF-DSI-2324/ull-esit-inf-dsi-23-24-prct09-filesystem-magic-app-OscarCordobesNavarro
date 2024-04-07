@@ -6,8 +6,8 @@
  * Curso: 3º
  * Autor: Óscar Cordobés Navarro
  * Correo: alu0101478081@ull.edu.es
- * Fecha: 18/03/2024
- * Práctica 9: Clases e interfaces genéricas. Principios SOLID
+ * Fecha: 07/04/2024
+ * Práctica 9: Filesystem  of node.js
  */
 
 import chalk from "chalk";
@@ -366,4 +366,3 @@ yargs(hideBin(process.argv))
   )
   .help()
   .argv;
-

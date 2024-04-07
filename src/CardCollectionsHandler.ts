@@ -6,194 +6,208 @@
  * Curso: 3º
  * Autor: Óscar Cordobés Navarro
  * Correo: alu0101478081@ull.edu.es
- * Fecha: 18/03/2024
- * Práctica 9: Clases e interfaces genéricas. Principios SOLID
+ * Fecha: 07/04/2024
+ * Práctica 9: Filesystem  of node.js
  */
-
 import { ICard } from "./ICard.js";
 import { Color } from "./IColor.js";
 import fs from "fs";
+import path from "path";
 import chalk from "chalk";
 
-/**
- * Clase que se encarga de gestionar las colecciones de cartas
- *
- * A partir de una ruta de archivo, se pueden añadir, eliminar, leer, actualizar y listar cartas.
- * En formato JSON
- */
 export class CardCollectionsHandler {
   private userCollectionPath: string = "./data/";
-  private userCollection: ICard[] = [];
   private userName: string = "";
+  private userDirectory: string = "";
 
   constructor(userName?: string) {
     if (userName) {
       this.userName = userName;
-      this.updateUser(userName);
+      this.userDirectory = path.join(this.userCollectionPath, this.userName);
     }
   }
-
   /**
    * Devuelve la ruta de la colección del usuario.
    * @returns La ruta de la colección del usuario.
    */
   public getUserCollectionPath(): string {
-    return this.userCollectionPath;
+    return this.userDirectory;
   }
 
   /**
-   * Devuelve el nombre de usuario.
-   * @returns El nombre de usuario.
+   * Devuelve el nombre del usuario.
+   * @returns El nombre del usuario.
    */
   public getUserName(): string {
     return this.userName;
   }
 
   /**
-   * Actualiza el usuario y la ruta de la colección de usuario.
-   * @param newUser El nuevo nombre de usuario.
-   * @returns void
+   * Actualiza el nombre del usuario.
+   * @param newUser El nuevo nombre del usuario.
    */
   public updateUser(newUser: string): void {
-    this.userCollectionPath = "./data/" + newUser + ".json";
-    this.userCollection = [];
+    this.userName = newUser;
+    this.userDirectory = path.join(this.userCollectionPath, this.userName);
   }
 
   /**
-   * Actualiza la ruta de la colección de usuario.
-   * @param path La nueva ruta de la colección de usuario.
-   * @returns void
+   * Obtiene la ruta de un archivo de carta.
+   * @param id El identificador de la carta.
+   * @returns La ruta del archivo de la carta.
    */
-  public updatePath(path: string): void {
-    this.userCollectionPath = path;
-    this.userCollection = [];
+  private getCardFilePath(id: number): string {
+    return path.join(this.userDirectory, `${id}.json`);
   }
 
   /**
-   * Lee la colección de cartas desde el archivo especificado.
-   * Si el archivo no existe, se crea y se inicializa con un array vacío.
-   * @returns void
+   * Lee la colección de cartas del usuario.
+   * @returns La colección de cartas del usuario.
    */
-  private readCollection(): void {
-    // Asegurarse de que el archivo existe
-    if (!fs.existsSync(this.userCollectionPath)) {
-      throw new Error("Collection not found");
-    } else {
-      const data = fs.readFileSync(this.userCollectionPath, "utf-8");
-      this.userCollection = JSON.parse(data);
+  private readCollection(): ICard[] {
+    const files = fs.readdirSync(this.userDirectory);
+    const cards: ICard[] = [];
+
+    for (const file of files) {
+      const filePath = path.join(this.userDirectory, file);
+      const data = fs.readFileSync(filePath, "utf-8");
+      const card = JSON.parse(data);
+      cards.push(card);
     }
+
+    return cards;
   }
 
   /**
-   * Escribe la colección de cartas en el archivo especificado.
-   * @param data La colección de cartas a escribir.
-   * @returns void
+   * Escribe una carta en un archivo.
+   * @param card Carta a escribir.
    */
-  private writeCollection(data: ICard[]): void {
-    fs.writeFileSync(this.userCollectionPath, JSON.stringify(data, null, 1));
+  private writeCardToFile(card: ICard): void {
+    const filePath = this.getCardFilePath(card.id);
+    const directoryPath = path.dirname(filePath);
+
+    if (!fs.existsSync(directoryPath)) {
+      fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    fs.writeFileSync(filePath, JSON.stringify(card, null, 1));
   }
 
   /**
-   * Añade una tarjeta a la colección del usuario.
-   * @param card La tarjeta que se va a añadir.
-   * @returns void
+   * Elimina un archivo de carta.
+   * @param id Identificador de la carta.
+   */
+  private deleteCardFile(id: number): void {
+    const filePath = this.getCardFilePath(id);
+    fs.unlinkSync(filePath);
+  }
+
+  /**
+   * Método público para añadir una carta a la colección.
+   * @param card Carta a añadir.
    */
   public addCard(card: ICard): void {
-    try {
-      this.readCollection();
-    } catch {
-      this.userCollection.push(card);
-      this.writeCollection(this.userCollection);
-      return;
+    const filePath = this.getCardFilePath(card.id);
+    
+    if (fs.existsSync(filePath)) {
+      throw new Error("Card already exists at " + this.userName + " collection");
     }
-    if (this.userCollection.find((c) => c.id === card.id)) {
-      throw new Error(
-        "Card already exists at " + this.userName + " collection",
-      );
-    } else {
-      if(card.lineType === "Creature" && (!card.strength || !card.endurance)) {
-        throw new Error("Creature card must have strength and endurance");
-      }
-      if(card.lineType === "Planeswalker" && !card.brandsLoyalty) {
-        throw new Error("Planeswalker card must have brands loyalty");
-      }
-      this.userCollection.push(card);
-      this.writeCollection(this.userCollection);
+
+    if(card.lineType === "Creature" && (!card.strength || !card.endurance)) {
+      throw new Error("Creature card must have strength and endurance");
     }
+    if(card.lineType === "Planeswalker" && !card.brandsLoyalty) {
+      throw new Error("Planeswalker card must have brands loyalty");
+    }
+
+    this.writeCardToFile(card);
   }
 
   /**
-   * Elimina una tarjeta de la colección del usuario.
-   * @param id El identificador de la tarjeta que se va a eliminar.
-   * @returns void
+   * Método público para eliminar una carta de la colección.
+   * @param id Identificador de la carta.
    */
   public removeCard(id: number): void {
-    this.readCollection();
-    const index = this.userCollection.findIndex((card) => card.id === id);
-    if (index === -1) {
-      throw new Error("Card not found at " + this.userName + " collection");
-    } else {
-      this.userCollection.splice(index, 1);
-      this.writeCollection(this.userCollection);
+    const filePath = this.getCardFilePath(id);
+
+    // Si el directorio no existe, no se puede eliminar la carta
+    if (!fs.existsSync(this.userDirectory)) {
+      throw new Error("Collection not found");
     }
+
+    if (!fs.existsSync(filePath)) {
+      throw new Error("Card not found at " + this.userName + " collection");
+    }
+
+    this.deleteCardFile(id);
   }
 
   /**
-   * Muestra una carta de la colección del usuario.
-   * @param id El identificador de la tarjeta que se va a leer.
-   * @returns void
+   * Método público para mostrar una carta de la colección.
+   * @param id Identificador de la carta.
    */
   public showCard(id: number): void {
-    this.readCollection();
-    const card = this.userCollection.find((card) => card.id === id);
-    if (card) {
-      this.printCard(card);
-    } else {
+    const filePath = this.getCardFilePath(id);
+
+    if (!fs.existsSync(this.userDirectory)) {
+      throw new Error("Collection not found");
+    }
+
+    if (!fs.existsSync(filePath)) {
       throw new Error("Card not found");
     }
+
+    const data = fs.readFileSync(filePath, "utf-8");
+    const card = JSON.parse(data);
+    this.printCard(card);
   }
 
   /**
-   * Actualiza una tarjeta de la colección del usuario.
-   * @param card La tarjeta que se va a actualizar.
-   * @param id El identificador de la tarjeta que se va a actualizar.
-   * @returns void
+   * Método público para actualizar una carta de la colección.
+   * @param card Carta a la que se va a actualizar.
+   * @param id Identificador de la carta.
    */
   public updateCard(card: ICard, id: number): void {
     if (card.id !== id) {
       throw new Error("Card ID and parameter ID do not match");
     }
-    this.readCollection();
-    const index = this.userCollection.findIndex((card) => card.id === id);
-    if (index === -1) {
-      throw new Error("Card not found at " + this.userName + " collection");
-    } else {
-      this.userCollection[index] = card;
-      this.writeCollection(this.userCollection);
+
+    const filePath = this.getCardFilePath(id);
+
+    if (!fs.existsSync(this.userDirectory)) {
+      throw new Error("Collection not found");
     }
+
+    if (!fs.existsSync(filePath)) {
+      throw new Error("Card not found at " + this.userName + " collection");
+    }
+
+    this.writeCardToFile(card);
   }
 
   /**
-   * Lista todas las tarjetas de la colección del usuario.
-   * @returns void
+   * Método público para listar las cartas de la colección.
    */
   public listCollection(): void {
-    this.readCollection();
-    if (this.userCollection.length === 0) {
-      throw new Error("Collection is empty");
-    } else {
-      console.log(chalk.green.bold("Collection of " + this.userName + ":"));
-      this.userCollection.forEach((card) => {
-        console.log("---------------------------------");
-        this.printCard(card);
-      });
+    if (!fs.existsSync(this.userDirectory)) {
+      throw new Error("Collection not found");
     }
+    const cards = this.readCollection();
+
+    if (cards.length === 0) {
+      throw new Error("Collection is empty");
+    }
+
+    console.log(chalk.green.bold("Collection of " + this.userName + ":"));
+    cards.forEach((card) => {
+      console.log("---------------------------------");
+      this.printCard(card);
+    });
   }
 
   /**
-   * Imprime una tarjeta.
-   * @param card La tarjeta que se va a imprimir.
-   * @returns void
+   * Método privado para imprimir una carta.
+   * @param card Carta a imprimir.
    */
   private printCard(card: ICard): void {
     const colorName = Object.keys(Color).find(
@@ -212,25 +226,39 @@ export class CardCollectionsHandler {
   }
 
   /**
-   * Obtiene una tarjeta de la colección del usuario.
-   * @param id El identificador de la tarjeta que se va a obtener.
-   * @returns La tarjeta que se ha obtenido ICard.
+   * Método público para obtener una carta de la colección.
+   * @param id Identificador de la carta.
+   * @returns La carta de la colección.
    */
   public getCard(id: number): ICard {
-    this.readCollection();
-    const card = this.userCollection.find((card) => card.id === id);
-    if (card) {
-      return card;
-    } else {
+    const filePath = this.getCardFilePath(id);
+
+    if (!fs.existsSync(this.userDirectory)) {
+      throw new Error("Collection not found");
+    }
+
+    if (!fs.existsSync(filePath)) {
       throw new Error("Card not found at " + this.userName + " collection");
     }
+
+    const data = fs.readFileSync(filePath, "utf-8");
+    const card = JSON.parse(data);
+    return card;
   }
 
   /**
-   * Elimina todos los elementos de la colección del usuario y guarda los cambios.
+   * Método público para limpiar la colección.
+   * Limpia el directorio de la colección del usuario.
    */
   public clearCollection(): void {
-    this.userCollection = [];
-    this.writeCollection(this.userCollection);
+    if (!fs.existsSync(this.userDirectory)) {
+      return;
+    }
+    const files = fs.readdirSync(this.userDirectory);
+
+    for (const file of files) {
+      const filePath = path.join(this.userDirectory, file);
+      fs.unlinkSync(filePath);
+    }
   }
 }
